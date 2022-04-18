@@ -22,11 +22,11 @@ just with the big difference that everything is implemented right into your Wind
 
 ## Compilation
 
-Building straight forward. `git clone` the repository, go into it and run `generate_vs2022.bat`
-Afterwards you can open the generated solution, select `Debug` & `Win64` and press `CTRL+B` to build the whole repo.
+Building is straight forward. `git clone` the repository and run `generate_vs2022.bat`.
+Afterwards you can open the generated solution and build it with `CTRL+B`.
 
-Once it's been build, you can run `.\enable_extension.bat` as admin to run the `Shell Extension`.
-Please note that `.\enable_extension.bat` will restart your explorer! So if you have done some work not saved, tough luck :/
+Once it's been build, you can run `.\enable_extension.bat` as admin to enable &register the `Shell Extension` within your explorer.
+Please note that `.\enable_extension.bat` will restart your explorer! So if you have done some work that is not saved, tough luck :/
 
 ## Debugging
 
