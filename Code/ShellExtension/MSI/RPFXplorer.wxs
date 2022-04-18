@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="RPFXplorer" Language="1033" Version="1.0.0.0" Manufacturer="Mempler" UpgradeCode="ad909369-ad84-4803-9401-c722cba0b87f">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="RPFXplorer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+		<Condition Message='This application only runs on Windows 7 or greater.'>VersionNT > 601</Condition>
+
+		<UIRef Id="WixUI_InstallDir" />
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+		<CustomAction Id="COMRegister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s "[INSTALLFOLDER]RPFXplorer.Win64.dll"' />
+		<CustomAction Id="COMUnregister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s /u "[INSTALLFOLDER]RPFXplorer.Win64.dll"' />
+
+		<InstallExecuteSequence>
+			<Custom Action="COMRegister" Before="InstallFinalize">NOT Installed</Custom>
+			<Custom Action="COMUnregister" After="InstallInitialize">Installed</Custom>
+		</InstallExecuteSequence>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="INSTALLFOLDER" Name="RPFXplorer" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id='ShellExtension' Guid='d2399f74-6856-411d-aa60-c15c81978b6d'>
+				<File Id='RPFXplorer.Win64.dll' Name='RPFXplorer.Win64.dll' DiskId='1' Source='bin/Release/RPFXplorer.Win64.dll' KeyPath='yes' />
+				<Shortcut Id="UninstallProduct"
+                  Name="Uninstall RPFXplorer"
+                  Description="..."
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+
+				<RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{397481b8-1b95-41dc-bfe1-0c3f98e504ee}" Value="RPFXplorer Shell Extension" Action="write" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
