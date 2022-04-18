@@ -36,6 +36,7 @@
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id='ShellExtension' Guid='d2399f74-6856-411d-aa60-c15c81978b6d'>
 				<File Id='RPFXplorer.Win64.dll' Name='RPFXplorer.Win64.dll' DiskId='1' Source='bin/Release/RPFXplorer.Win64.dll' KeyPath='yes' />
+				
 				<Shortcut Id="UninstallProduct"
                   Name="Uninstall RPFXplorer"
                   Description="..."

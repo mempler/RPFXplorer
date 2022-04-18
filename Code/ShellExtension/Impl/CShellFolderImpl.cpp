@@ -53,7 +53,7 @@ STDMETHODIMP CShellFolderImpl::GetCurFolder(PIDLIST_ABSOLUTE* pidl)
         return E_POINTER;
 
     // Copy the pidl
-    *pidl = (LPITEMIDLIST)ILClone(m_pWorkingPidl);
+    *pidl = ILClone(m_pWorkingPidl);
 
     return S_OK;
 }

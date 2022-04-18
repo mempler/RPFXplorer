@@ -8,7 +8,6 @@ project "RPFXplorer"
 
    atl('Dynamic')
 
-   -- add /FORCE:MULTIPLE
    linkoptions { "/FORCE:MULTIPLE" }
 
    -- Precompiled headers
@@ -37,3 +36,4 @@ project "RPFXplorer"
 
    filter "files:**.c"
       flags { "NoPCH" }
+

@@ -1,5 +1,7 @@
 local ROOT_DIR = '.'
 
+include ('vcpkg.lua')
+
 workspace "RPFXplorer"
    configurations { "Debug", "Release" }
     platforms { "Win64" }
@@ -7,6 +9,8 @@ workspace "RPFXplorer"
     targetdir ( ROOT_DIR .. "/bin/%{cfg.buildcfg}" )
 
     cppdialect "C++20"
+
+    files { "vcpkg.json" }
 
     include('Code/LibRPF')
     include('Code/ShellExtension')

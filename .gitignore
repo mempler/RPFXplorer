@@ -6,3 +6,4 @@
 *.cab
 obj/
 bin/
+vcpkg_installed/
