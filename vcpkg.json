@@ -3,6 +3,7 @@
     "version-string": "0.0.1",
     "port-version": 0,
     "dependencies": [
-        "breakpad"
+        "breakpad",
+        "gtest"
     ]
 }

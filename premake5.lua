@@ -15,6 +15,11 @@ workspace "RPFXplorer"
     include('Code/LibRPF')
     include('Code/ShellExtension')
 
+    -- Tests
+    group "Tests"
+        include('Code/LibRPF.Tests')
+    group ""
+
 if _ACTION == 'clean' then
     os.rmdir('bin')
     os.rmdir('obj')

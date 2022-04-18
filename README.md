@@ -22,7 +22,7 @@ just with the big difference that everything is implemented right into your Wind
 
 ## Compilation
 
-Building is straight forward. `git clone` the repository and run `generate_vs2022.bat`.
+Building is somewhat straight forward. setup [VCPKG](https://vcpkg.io/en/getting-started.html), `git clone` the repository and run `generate_vs2022.bat`.
 Afterwards you can open the generated solution and build it with `CTRL+B`.
 
 Once it's been build, you can run `.\enable_extension.bat` as admin to enable &register the `Shell Extension` within your explorer.
@@ -34,20 +34,6 @@ Debugging is a bit weird as we're loading a `Shell Extension` we must debug the 
 Though, it's pretty straight forward as I've written some automized scripts for them.
 
 Run `.\enable_extension.bat` as admin, dont open an explorer window. Attach the debugger on Visual Studio (Debug -> Attach To Process) to `explorer.exe`
-
-## TODO
-
-Things we must do to make this ready to use for everyone!
-
-| State |               Description |
-| :---- | ------------------------: |
-| [ ]   |     Read-Only file access |
-| [ ]   |             Writable file |
-| [ ]   |      Rename a file/folder |
-| [ ]   | Drag & Drop a file/folder |
-| [ ]   |   Dolphin support (Linux) |
-
-TODO: add more things here which are tracked in issues
 
 ## License
 
