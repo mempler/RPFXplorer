@@ -54,6 +54,9 @@ DirectoryEntry:
 
 NameTable:
 	\0 terminated strings
+
+Pages:
+	512 bytes large
 */
 
 struct RPFHeader
@@ -81,11 +84,11 @@ struct RPFEntry
 
 		struct
 		{
-			WORD wNameOffset;
+			WORD  wNameOffset;
 			DWORD hwFileSize : 24;
 			DWORD hwFileOffset : 24;
 			DWORD dwFileUncompressedSize;
-			BOOL bIsEncrypted;
+			BOOL  bIsEncrypted;
 		} BinaryFile;
 
 		struct
@@ -96,4 +99,9 @@ struct RPFEntry
 			DWORD dwEntriesCount;
 		} Directory;
 	};
+};
+
+struct RPFPage
+{
+
 };

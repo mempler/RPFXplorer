@@ -19,7 +19,7 @@ HRESULT RPFReader::Open(HANDLE hFile)
 	// with one big swoop which'll speed up the reading process as we no longer rely on the FileSystem
 
 	m_vTemporaryData.resize(static_cast<SIZE_T>(Header.dwEntryCount) * 16 + Header.dwNameLength);
-	if (!ReadFile(m_hFile, m_vTemporaryData.data(), m_vTemporaryData.size(), &m_nOffset, NULL))
+	if (!ReadFile(m_hFile, m_vTemporaryData.data(), (DWORD) m_vTemporaryData.size(), &m_nOffset, NULL))
 		return E_UNEXPECTED;
 
 	DWORD offset = m_nOffset;	// Temporarily store the offset
@@ -63,6 +63,8 @@ void RPFReader::Close()
 	CloseHandle(m_hFileMap);
 }
 
+//-----------------------------------------------------
+
 const char* RPFReader::GetNameRAW(RPFEntry* pEntry)
 {
 	DWORD offset = 0;
@@ -95,6 +97,8 @@ std::wstring RPFReader::GetNameW(RPFEntry* pEntry)
 	return std::convert(GetNameA(pEntry));
 }
 
+//-----------------------------------------------------
+
 RPFEntry* RPFReader::GetEntryByNameA(const std::string& sName)
 {
 	// Yup, this will be slow :/
@@ -110,30 +114,14 @@ RPFEntry* RPFReader::GetEntryByNameW(const std::wstring& sName)
 	return GetEntryByNameA(std::convert(sName));
 }
 
+//-----------------------------------------------------
+
 std::vector<BYTE> RPFReader::GetContent(RPFEntry* pEntry)
 {
-	std::vector<BYTE> buffer;
-
-	BYTE* begin = m_szMappedFile;
-	BYTE* end = begin;
-
-	auto size = GetSizeFromEntry(pEntry);
-
-	switch (pEntry->dwType)
-	{
-	case RPF_ENTRY_TYPE_RESOURCE:
-		begin += pEntry->ResourceFile.hwFileOffset + m_nOffset;
-		break;
-
-	case RPF_ENTRY_TYPE_BINARY:
-		begin += pEntry->BinaryFile.hwFileOffset + m_nOffset;
-		break;
-	}
-
-	buffer = std::vector<BYTE>{ begin, end };
-	end = begin + size;
-
-	return buffer;
+	BYTE* begin = m_szMappedFile + (pEntry->ResourceFile.hwFileOffset * 512);
+	BYTE* end = begin + GetSizeFromEntry(pEntry);
+	
+	return std::vector<BYTE>{ begin, end };
 }
 
 DWORD RPFReader::GetSizeFromEntry(RPFEntry* pEntry)
@@ -143,8 +131,23 @@ DWORD RPFReader::GetSizeFromEntry(RPFEntry* pEntry)
 
 	// TODO: figure this out...
 
-	return 0;
+	return pEntry->ResourceFile.dwSystemFlags;
 }
+
+//-----------------------------------------------------
+
+std::vector<RPFEntry*> RPFReader::GetSubEntries(RPFEntry* pEntry)
+{
+	if (pEntry->dwType != RPF_ENTRY_TYPE_DIRECTORY)
+		return { };
+
+	auto* begin	= &Entries.at(pEntry->Directory.dwEntriesIndex);
+	auto* end	= begin + pEntry->Directory.dwEntriesCount;
+
+	return { begin, end };
+}
+
+//-----------------------------------------------------
 
 HRESULT RPFReader::ReadHeader()
 {
@@ -176,36 +179,34 @@ HRESULT RPFReader::ReadEntry(DWORD dwIndex)
 
 	CopyMemory(&data, &m_vTemporaryData.at(m_nOffset), 16); m_nOffset += 16;
 
-	//assert(ReadFile(m_hFile, &data, 16, NULL, &m_OL)); m_OL.Offset += 16;
-
 	RPFEntry& entry = Entries.at(dwIndex);
 
 	// Figure out who we're
 	if (data.val2 == 0x7fffff00)
 	{
-		entry.dwType = RPF_ENTRY_TYPE_DIRECTORY;
-		entry.Directory.dwNameOffset = data.val1;
-		entry.Directory.dwIdentifier = data.val2;
-		entry.Directory.dwEntriesIndex = data.val3;
-		entry.Directory.dwEntriesCount = data.val4;
+		entry.dwType							= RPF_ENTRY_TYPE_DIRECTORY;
+		entry.Directory.dwNameOffset			= data.val1;
+		entry.Directory.dwIdentifier			= data.val2;
+		entry.Directory.dwEntriesIndex			= data.val3;
+		entry.Directory.dwEntriesCount			= data.val4;
 	}
 	else if (data.val2 & 0x80000000)
 	{
-		entry.dwType = RPF_ENTRY_TYPE_BINARY;
-		entry.BinaryFile.wNameOffset = data.buf1[0] | data.buf1[1] << 8;
-		entry.BinaryFile.hwFileSize = data.buf1[2] | data.buf1[3] << 8 | data.buf2[0] << 16;
-		entry.BinaryFile.hwFileOffset = data.buf2[1] | data.buf2[2] << 8 | data.buf2[3] << 16;
-		entry.BinaryFile.dwFileUncompressedSize = data.val3;
-		entry.BinaryFile.bIsEncrypted = data.val4;
+		entry.dwType							= RPF_ENTRY_TYPE_BINARY;
+		entry.BinaryFile.wNameOffset			= data.buf1[0] | data.buf1[1] << 8;
+		entry.BinaryFile.hwFileSize				= data.buf1[2] | data.buf1[3] << 8 | data.buf2[0] << 16;
+		entry.BinaryFile.hwFileOffset			= data.buf2[1] | data.buf2[2] << 8 | data.buf2[3] << 16;
+		entry.BinaryFile.dwFileUncompressedSize	= data.val3;
+		entry.BinaryFile.bIsEncrypted			= data.val4;
 	}
 	else
 	{
-		entry.dwType = RPF_ENTRY_TYPE_RESOURCE;
-		entry.ResourceFile.wNameOffset = data.buf1[0] | data.buf1[1] << 8;
-		entry.ResourceFile.hwFileSize = data.buf1[2] | data.buf1[3] << 8 | data.buf2[0] << 16;
-		entry.ResourceFile.hwFileOffset = data.buf2[1] | data.buf2[2] << 8 | data.buf2[3] << 16;
-		entry.ResourceFile.dwSystemFlags = data.val3;
-		entry.ResourceFile.dwGraphicsFlags = data.val4;
+		entry.dwType							= RPF_ENTRY_TYPE_RESOURCE;
+		entry.ResourceFile.wNameOffset			= data.buf1[0] | data.buf1[1] << 8;
+		entry.ResourceFile.hwFileSize			= data.buf1[2] | data.buf1[3] << 8 | data.buf2[0] << 16;
+		entry.ResourceFile.hwFileOffset			= data.buf2[1] | data.buf2[2] << 8 | data.buf2[3] << 16;
+		entry.ResourceFile.dwSystemFlags		= data.val3;
+		entry.ResourceFile.dwGraphicsFlags		= data.val4;
 	}
 
 	return S_OK;

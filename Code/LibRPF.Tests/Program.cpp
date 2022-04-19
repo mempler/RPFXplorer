@@ -1,16 +1,19 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <gmock/gmock-matchers.h>
 
 #include <RPFReader.h>
 
 class RPFReaderTest : public ::testing::Test
 {
 protected:
-	HANDLE hFile;
-	RPFReader reader;
+	HANDLE		hFile = NULL;
+	RPFReader	reader {};
 
 	void SetUp() override
 	{
 		hFile = CreateFile(L"./Resources/SimpleOPEN.rpf", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ASSERT_HRESULT_SUCCEEDED(reader.Open(hFile));
 	}
 
 	void TearDown() override
@@ -21,23 +24,16 @@ protected:
 	}
 };
 
-TEST_F(RPFReaderTest, OpenSimpleRPF)
-{
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
-}
-
 //-----------------------------------------------------------------
 
 TEST_F(RPFReaderTest, GetEntryByNameA)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
 	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 }
 
 TEST_F(RPFReaderTest, GetEntryByNameW)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
 	RPFEntry* entry = reader.GetEntryByNameW(L"some_file.txt");
 	ASSERT_NE(nullptr, entry);
 }
@@ -46,7 +42,6 @@ TEST_F(RPFReaderTest, GetEntryByNameW)
 
 TEST_F(RPFReaderTest, GetNameRAW)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
 	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 
@@ -56,7 +51,6 @@ TEST_F(RPFReaderTest, GetNameRAW)
 
 TEST_F(RPFReaderTest, GetNameA)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
 	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 
@@ -66,7 +60,6 @@ TEST_F(RPFReaderTest, GetNameA)
 
 TEST_F(RPFReaderTest, GetNameW)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
 	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 
@@ -78,14 +71,12 @@ TEST_F(RPFReaderTest, GetNameW)
 
 TEST_F(RPFReaderTest, GetContent)
 {
-	ASSERT_TRUE(SUCCEEDED(reader.Open(hFile)));
-	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
+	RPFEntry* entry = reader.GetEntryByNameA("owo.txt");
 	ASSERT_NE(nullptr, entry);
 
 	auto data = reader.GetContent(entry);
 
-	ASSERT_EQ(TRUE, FALSE);
-	//ASSERT_EQ(, { 0 });
+	ASSERT_THAT(data, ::testing::ElementsAre('o', 'w', 'o'));
 }
 
 //-----------------------------------------------------------------
