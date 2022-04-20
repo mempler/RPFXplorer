@@ -41,8 +41,8 @@ public:
 
 	DWORD					GetSizeFromEntry(RPFEntry*);
 
-	inline RPFEntry*		GetRootEntry() { return &Entries.at(0); }
-	std::vector<RPFEntry*>	GetSubEntries(RPFEntry*);
+	inline RPFEntry&		GetRootEntry() { return Entries.at(0); }
+	std::vector<RPFEntry>	GetSubEntries(RPFEntry*);
 
 private:
 	DWORD					m_nOffset = 0;

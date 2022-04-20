@@ -136,7 +136,7 @@ DWORD RPFReader::GetSizeFromEntry(RPFEntry* pEntry)
 
 //-----------------------------------------------------
 
-std::vector<RPFEntry*> RPFReader::GetSubEntries(RPFEntry* pEntry)
+std::vector<RPFEntry> RPFReader::GetSubEntries(RPFEntry* pEntry)
 {
 	if (pEntry->dwType != RPF_ENTRY_TYPE_DIRECTORY)
 		return { };
@@ -216,5 +216,15 @@ HRESULT RPFReader::ReadNameTable()
 {
 	NameTable.resize(Header.dwNameLength);
 	CopyMemory(NameTable.data(), &m_vTemporaryData.at(m_nOffset), (DWORD)NameTable.size()); m_nOffset += (DWORD)NameTable.size();
+	
+	// Decrypt the name table if needed
+	switch (Header.dwEncryption)
+	{
+	case RPF_ENCRYPTION_NONE: break;
+	case RPF_ENCRYPTION_OPEN: break;
+	case RPF_ENCRYPTION_AES: break;
+	case RPF_ENCRYPTION_NG: break;
+	}
+	
 	return S_OK;
 }

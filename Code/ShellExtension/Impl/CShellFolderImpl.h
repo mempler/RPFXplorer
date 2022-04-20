@@ -3,7 +3,7 @@
 #include "resource.h"       // main symbols
 
 #include "RPFXplorer_h.h"
-#include "RPF.h"
+#include "RPFReader.h"
 
 #include <vector>
 
@@ -14,8 +14,8 @@ using namespace ATL;
 class ATL_NO_VTABLE CShellFolderImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CShellFolderImpl, &CLSID_ShellFolderImpl>,
-	public IPersistFolder2,
-	public IShellFolder2
+	public IPersistFolder,
+	public IShellFolder
 {
 public:
 
@@ -25,9 +25,7 @@ DECLARE_NOT_AGGREGATABLE(CShellFolderImpl)
 
 BEGIN_COM_MAP(CShellFolderImpl)
 	COM_INTERFACE_ENTRY(IShellFolder)
-	COM_INTERFACE_ENTRY(IShellFolder2)
 	COM_INTERFACE_ENTRY(IPersistFolder)
-	COM_INTERFACE_ENTRY(IPersistFolder2)
 	COM_INTERFACE_ENTRY(IPersist)
 END_COM_MAP()
 
@@ -40,10 +38,6 @@ END_COM_MAP()
 	// IPersistFolder
 	//-------------------------------------------------------------------------------
 	STDMETHOD(Initialize)(LPCITEMIDLIST);
-
-	// IPersistFolder2
-	//-------------------------------------------------------------------------------
-	STDMETHOD(GetCurFolder)(PIDLIST_ABSOLUTE*);
 
 	// IShellFolder
 	//-------------------------------------------------------------------------------
@@ -58,22 +52,8 @@ END_COM_MAP()
 	STDMETHOD(ParseDisplayName) (HWND, LPBC, LPOLESTR, LPDWORD, LPITEMIDLIST*, LPDWORD);
 	STDMETHOD(SetNameOf) (HWND, LPCITEMIDLIST, LPCOLESTR, DWORD, LPITEMIDLIST*);
 
-	// IShellFolder2
-	//-------------------------------------------------------------------------------
-	STDMETHOD(GetDefaultSearchGUID) (GUID*);
-	STDMETHOD(EnumSearches) (IEnumExtraSearch**);
-	STDMETHOD(GetDefaultColumn) (DWORD, ULONG*, ULONG*);
-	STDMETHOD(GetDefaultColumnState) (UINT, SHCOLSTATEF*);
-	STDMETHOD(GetDetailsEx) (PCUITEMID_CHILD, const SHCOLUMNID*, VARIANT*);
-	STDMETHOD(GetDetailsOf) (PCUITEMID_CHILD, UINT, SHELLDETAILS*);
-	STDMETHOD(MapColumnToSCID) (UINT, SHCOLUMNID*);
-
 private:
-	RPFReader* m_pActiveRPFReader;
-	RPF* m_pActiveRPF;
-
-	RPF::Directory* m_pActiveDirectory = NULL;
-	LPCITEMIDLIST m_pWorkingPidl;
+	RPFReader* m_pActiveRPF = NULL;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ShellFolderImpl), CShellFolderImpl)
