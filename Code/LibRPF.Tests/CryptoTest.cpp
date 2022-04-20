@@ -16,11 +16,15 @@ TEST(AES, EncryptAndDecrypt)
 	BYTE key[32] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
 
 	BYTE* pBuffer = NULL;
-	DWORD pBufferSize = 0;
+	INT iBufferSize = 0;
+	ASSERT_HRESULT_SUCCEEDED(EncryptAES((LPCBYTE)"Hello World", 12, &pBuffer, &iBufferSize, key));
 
-	ASSERT_HRESULT_SUCCEEDED(EncryptAES((LPCBYTE)"Hello World", 12, &pBuffer, &pBufferSize, key));
+	BYTE* pDBuffer = NULL;
+	INT iDBufferSize = 0;
+	ASSERT_HRESULT_SUCCEEDED(DecryptAES(pBuffer, iBufferSize, &pDBuffer, &iDBufferSize, key));
 
-	// TODO: decrypt
+	ASSERT_STREQ((const char*)pDBuffer, "Hello World");
 
-	delete pBuffer;
+	delete[] pBuffer;
+	delete[] pDBuffer;
 }

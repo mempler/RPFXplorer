@@ -3,6 +3,8 @@
     "version-string": "0.0.1",
     "port-version": 0,
     "dependencies": [
+        "mimalloc",
+        "openssl",
         "breakpad",
         "gtest"
     ]
