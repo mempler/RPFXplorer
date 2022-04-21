@@ -19,10 +19,11 @@ exit /b
   cd %~1
 
   cd bin\Debug
-    regsvr32 /s "RPFXplorer.Win64.dll"
+    regsvr32 /s "rpfxplr.dll"
   cd ..\..
   
   start explorer.exe
+  pause.
   exit
 exit /b
 

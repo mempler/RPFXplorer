@@ -1,9 +1,9 @@
-local ROOT_DIR = '.'
+ROOT_DIR = os.getcwd()
 
 include ('vcpkg.lua')
 
 workspace "RPFXplorer"
-   configurations { "Debug", "Release" }
+    configurations { "Debug", "Release" }
     platforms { "Win64" }
     language "C++"
     targetdir ( ROOT_DIR .. "/bin/%{cfg.buildcfg}" )
@@ -12,12 +12,21 @@ workspace "RPFXplorer"
 
     files { "vcpkg.json" }
 
-    include('Code/LibRPF')
-    include('Code/ShellExtension')
+    group "dll/lib/rpf"
+        include('Code/dll/lib/rpf')
+    group ""
 
-    -- Tests
-    group "Tests"
-        include('Code/LibRPF.Tests')
+    group "dll/lib/rpf/tests"
+        include('Code/tests/dll/rpf')
+    group ""
+
+    group "dll/shellext"
+        include('Code/dll/shellext/rpfxplr')
+    group ""
+
+    group "exe/tools"
+        include('Code/exe/tools/aulens')
+        include('Code/exe/tools/modlense')
     group ""
 
 if _ACTION == 'clean' then

@@ -15,8 +15,8 @@
 		<UIRef Id="WixUI_InstallDir" />
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
-		<CustomAction Id="COMRegister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s "[INSTALLFOLDER]RPFXplorer.Win64.dll"' />
-		<CustomAction Id="COMUnregister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s /u "[INSTALLFOLDER]RPFXplorer.Win64.dll"' />
+		<CustomAction Id="COMRegister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s "[INSTALLFOLDER]\shellext\rpfxplr.dll"' />
+		<CustomAction Id="COMUnregister" Impersonate="no" Execute="deferred" Directory="INSTALLFOLDER" ExeCommand='[System64Folder]regsvr32.exe /s /u "[INSTALLFOLDER]\shellext\rpfxplr.dll"' />
 
 		<InstallExecuteSequence>
 			<Custom Action="COMRegister" Before="InstallFinalize">NOT Installed</Custom>
@@ -35,7 +35,16 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id='ShellExtension' Guid='d2399f74-6856-411d-aa60-c15c81978b6d'>
-				<File Id='RPFXplorer.Win64.dll' Name='RPFXplorer.Win64.dll' DiskId='1' Source='bin/Release/RPFXplorer.Win64.dll' KeyPath='yes' />
+				<!-- shellext -->
+				<File Id='rpfxplr' Name='rpfxplr.dll' DiskId='1' Source='bin/Release/shellext/rpfxplr.dll' KeyPath='yes' />
+
+				<!-- tools -->
+				<File Id='aulens' Name='aulens.exe' DiskId='1' Source='bin/Release/tools/aulens.exe' />
+				<File Id='modlense' Name='modlense.exe' DiskId='1' Source='bin/Release/tools/modlense.exe' />
+
+				<!-- Libraries -->
+				<File Id='rpf' Name='rpf.dll' DiskId='1' Source='bin/Release/rpf.dll' />
+				<File Id='libcrypto' Name='libcrypto-3-x64.dll' DiskId='1' Source='bin/Release/libcrypto-3-x64.dll' />
 				
 				<Shortcut Id="UninstallProduct"
                   Name="Uninstall RPFXplorer"
@@ -43,7 +52,7 @@
                   Target="[System64Folder]msiexec.exe"
                   Arguments="/x [ProductCode]"/>
 
-				<RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{397481b8-1b95-41dc-bfe1-0c3f98e504ee}" Value="RPFXplorer Shell Extension" Action="write" />
+				<RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{AFE33D09-58FA-4B49-90AB-A9EF9E7A6C2E}" Value="RPFXplorer Shell Extension" Action="write" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
