@@ -13,4 +13,11 @@
 #include "resource.h"
 #include "IRPF.h"
 
+#include <iostream>
+#include <cassert>
+#include <future>
+#include <vector>
+#include <string>
+#include <array>
+
 #include "RPFReader.h"

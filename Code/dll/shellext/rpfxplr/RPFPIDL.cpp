@@ -3,8 +3,8 @@
 
 LPITEMIDLIST _CreateRPFPIDL(_In_ const RPFEntry& rpfEntry, const RPFReader* prpfReader)
 {
-    auto name = prpfReader->GetNameW(&rpfEntry);
-    int size = sizeof(RPFPidlData) + name.size();
+    auto name = prpfReader->GetName(&rpfEntry);
+    int size = sizeof(RPFPidlData) + name.GetLength();
 
     RPFPidlData* pidl = (RPFPidlData*)SHAlloc(size);
     if (!pidl)
@@ -15,7 +15,7 @@ LPITEMIDLIST _CreateRPFPIDL(_In_ const RPFEntry& rpfEntry, const RPFReader* prpf
     pidl->rpfEntry = rpfEntry;
     pidl->uMagicValue = RPF_PIDL_MAGIC;
 
-    StrCpy(pidl->szName, name.c_str());
+    StrCpy(pidl->szName, name.GetString());
 
     return (LPITEMIDLIST)pidl;
 }
