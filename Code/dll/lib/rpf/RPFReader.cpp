@@ -1,9 +1,6 @@
+#include "pch.h"
+
 #include "RPFReader.h"
-
-#include "Utility/String.h"
-
-#include <iostream>
-#include <cstring>
 
 HRESULT RPFReader::Open(HANDLE hFile)
 {
@@ -87,33 +84,22 @@ const char* RPFReader::GetNameRAW(const RPFEntry* pEntry) const
 	return (const char*) &m_vNameTable.at(offset);
 }
 
-std::string RPFReader::GetNameA(const RPFEntry* pEntry) const
+ATL::CString RPFReader::GetName(const RPFEntry* pEntry) const
 {
 	return GetNameRAW(pEntry);
 }
 
-std::wstring RPFReader::GetNameW(const RPFEntry* pEntry) const
-{
-	return std::convert(GetNameA(pEntry));
-}
-
 //-----------------------------------------------------
 
-RPFEntry* RPFReader::GetEntryByNameA(const std::string& sName)
+RPFEntry* RPFReader::GetEntryByName(const ATL::CString& sName)
 {
 	// Yup, this will be slow :/
 	for (auto& entry : m_vEntries)
-		if (_stricmp(GetNameRAW(&entry), sName.c_str()) == 0)
+		if (sName.CompareNoCase(GetName(&entry)) == 0)
 			return &entry;
 
 	return nullptr;
 }
-
-RPFEntry* RPFReader::GetEntryByNameW(const std::wstring& sName)
-{
-	return GetEntryByNameA(std::convert(sName));
-}
-
 //-----------------------------------------------------
 
 std::vector<BYTE> RPFReader::GetContent(const RPFEntry* pEntry)

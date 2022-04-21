@@ -1,8 +1,5 @@
 #pragma once
 
-#include <wtypes.h>
-#include <array>
-
 #include "RPF.h"
 
 // NOTE: you must delete[] lpOutBuffer after usage

@@ -7,6 +7,9 @@ project "rpf"
 
    defines { "__RPF" }
 
+   pchheader "pch.h"
+   pchsource "pch.cpp"
+
    filter "configurations:Debug"
       defines { "DEBUG" }
       symbols "On"

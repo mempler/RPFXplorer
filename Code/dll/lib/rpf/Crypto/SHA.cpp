@@ -1,7 +1,5 @@
+#include "pch.h"
 #include "SHA.h"
-
-#include <openssl/sha.h>
-#include <cassert>
 
 std::array<BYTE, 20> GenerateSHA1(LPCBYTE lpBuffer, DWORD dwBufferSize)
 {

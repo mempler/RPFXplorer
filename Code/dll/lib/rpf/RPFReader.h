@@ -1,10 +1,6 @@
 #pragma once
 
 #include "RPFStructure.h"
-
-#include <vector>
-#include <string>
-
 #include "RPF.h"
 
 //
@@ -25,15 +21,13 @@ public:
 	RPF_API void					Close();
 
 	RPF_API const char*				GetNameRAW(const RPFEntry*) const;
-	RPF_API std::string				GetNameA(const RPFEntry*) const;
-	RPF_API std::wstring			GetNameW(const RPFEntry*) const;
+	RPF_API ATL::CString			GetName(const RPFEntry*) const;
 
 	//
 	// Please note that following might cause issues if E.G there are 2 entries with the same name
 	// in different directories.
 	//
-	RPF_API RPFEntry*				GetEntryByNameA(const std::string&);
-	RPF_API RPFEntry*				GetEntryByNameW(const std::wstring&);
+	RPF_API RPFEntry*				GetEntryByName(const ATL::CString&);
 
 	RPF_API std::vector<BYTE>		GetContent(const RPFEntry*);
 

@@ -1,7 +1,5 @@
+#include "pch.h"
 #include "AES.h"
-
-#include <openssl/aes.h>
-#include <openssl/evp.h>
 
 HRESULT EncryptAES(LPCBYTE lpBuffer, DWORD dwBufferSize, LPBYTE* lpOutBuffer, LPINT lpOutBufferSize, BYTE key[32], DWORD dwRounds)
 {

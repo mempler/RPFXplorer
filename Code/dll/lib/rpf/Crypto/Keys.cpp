@@ -1,13 +1,7 @@
+#include "pch.h"
 #include "Keys.h"
 
 #include "SHA.h"
-
-#include <array>
-#include <vector>
-#include <wtypes.h>
-#include <future>
-#include <iostream>
-
 
 // Copied from https://github.com/dexyfex/CodeWalker/blob/master/CodeWalker.Core/GameFiles/Utils/GTAKeys.cs
 // causes wow, i could've not done that lmao

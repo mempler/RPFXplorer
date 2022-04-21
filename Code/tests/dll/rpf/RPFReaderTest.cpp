@@ -1,6 +1,4 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <gmock/gmock-matchers.h>
+#include "pch.h"
 
 #include <RPFReader.h>
 
@@ -26,15 +24,9 @@ protected:
 
 //-----------------------------------------------------------------
 
-TEST_F(RPFReaderTest, GetEntryByNameA)
+TEST_F(RPFReaderTest, GetEntryByName)
 {
-	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
-	ASSERT_NE(nullptr, entry);
-}
-
-TEST_F(RPFReaderTest, GetEntryByNameW)
-{
-	RPFEntry* entry = reader.GetEntryByNameW(L"some_file.txt");
+	RPFEntry* entry = reader.GetEntryByName("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 }
 
@@ -42,36 +34,27 @@ TEST_F(RPFReaderTest, GetEntryByNameW)
 
 TEST_F(RPFReaderTest, GetNameRAW)
 {
-	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
+	RPFEntry* entry = reader.GetEntryByName("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 
 	const char* name = reader.GetNameRAW(entry);
 	ASSERT_STREQ(name, "some_file.txt");
 }
 
-TEST_F(RPFReaderTest, GetNameA)
+TEST_F(RPFReaderTest, GetName)
 {
-	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
+	RPFEntry* entry = reader.GetEntryByName("some_file.txt");
 	ASSERT_NE(nullptr, entry);
 
-	std::string name = reader.GetNameA(entry);
-	ASSERT_STREQ(name.c_str(), "some_file.txt");
-}
-
-TEST_F(RPFReaderTest, GetNameW)
-{
-	RPFEntry* entry = reader.GetEntryByNameA("some_file.txt");
-	ASSERT_NE(nullptr, entry);
-
-	std::wstring name = reader.GetNameW(entry);
-	ASSERT_STREQ(name.c_str(), L"some_file.txt");
+	ATL::CString name = reader.GetName(entry);
+	ASSERT_STREQ(name.GetString(), L"some_file.txt");
 }
 
 //-----------------------------------------------------------------
 
 TEST_F(RPFReaderTest, GetContent)
 {
-	RPFEntry* entry = reader.GetEntryByNameA("owo.txt");
+	RPFEntry* entry = reader.GetEntryByName("owo.txt");
 	ASSERT_NE(nullptr, entry);
 
 	auto data = reader.GetContent(entry);

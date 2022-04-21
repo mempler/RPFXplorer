@@ -1,8 +1,4 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <gmock/gmock-matchers.h>
-
-#include "RPF.h"
+#include "pch.h"
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);

@@ -1,5 +1,4 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "pch.h"
 
 #include "Crypto/AES.h"
 #include "Crypto/Jenkins.h"

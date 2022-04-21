@@ -1,7 +1,5 @@
 #pragma once
 
-#include <wtypes.h>
-
 #ifdef __RPF
 	#define RPF_API __declspec( dllexport )
 #else

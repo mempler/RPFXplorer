@@ -1,7 +1,5 @@
 #pragma once
 
-#include <wtypes.h>
-
 constexpr DWORD Jenkins32(LPCBYTE key, DWORD length)
 {
     DWORD hash = 0;

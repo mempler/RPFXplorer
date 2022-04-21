@@ -1,7 +1,5 @@
 #pragma once
 
-#include <wtypes.h>
-
 #include "RPF.h"
 
 // Very useful resources:
